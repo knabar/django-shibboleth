@@ -28,9 +28,9 @@ from signals import shib_logon_done
 
 
 def render_forbidden(*args, **kwargs):
-    httpresponse_kwargs = {'mimetype': kwargs.pop('mimetype', None)}
-    return HttpResponseForbidden(loader.render_to_string(*args, **kwargs),
-                                 **httpresponse_kwargs)
+    kwargs.pop('mimetype', None)
+    kwargs.pop('content_type', None)
+    return HttpResponseForbidden(loader.render_to_string(*args, **kwargs))
 
 
 def shib_register(request, RegisterForm=BaseRegisterForm,
