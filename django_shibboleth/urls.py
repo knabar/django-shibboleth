@@ -15,16 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with django_shibboleth  If not, see <http://www.gnu.org/licenses/>.
 
-try:
-    from django.conf.urls.defaults import *
-except ImportError:
-    from django.conf.urls import *
+from django.conf.urls import url
+from .views import shib_register, shib_meta
 
 # URL patterns for django_shibboleth
 
-urlpatterns = patterns('django_shibboleth.views',
-
-    url(r'^login/$',    'shib_register', name='shib_login'),
-    url(r'^register/$', 'shib_register', name='shib_register'),
-    url(r'^meta/$',     'shib_meta',     name='shib_meta'),
-)
+urlpatterns = [
+    url(r'^login/$',    shib_register, name='shib_login'),
+    url(r'^register/$', shib_register, name='shib_register'),
+    url(r'^meta/$',     shib_meta,     name='shib_meta'),
+]
