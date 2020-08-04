@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 
@@ -9,9 +9,8 @@ def shib_required(f):
         if 'HTTP_SHIB_SESSION_ID' in request.META and request.META['HTTP_SHIB_SESSION_ID']:
             attr, error = parse_attributes(request.META)
             if error:
-                return render_to_response('shibboleth/attribute_error.html', 
-                                          {'shib_attrs': attr}, 
-                                          context_instance=RequestContext(request))
+                return render(request, 'shibboleth/attribute_error.html',
+                                          {'shib_attrs': attr})
         else:
             return HttpResponseRedirect(build_shib_url(request, request.build_absolute_uri()))
         

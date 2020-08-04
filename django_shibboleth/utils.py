@@ -16,7 +16,7 @@
 # along with django_shibboleth  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 
@@ -59,9 +59,8 @@ def ensure_shib_session(request):
     
         attr, error = parse_attributes(request.META)
         if error:
-            return render_to_response('shibboleth/attribute_error.html', 
-                                      {'shib_attrs': attr}, 
-                                      context_instance=RequestContext(request))
+            return render(request, 'shibboleth/attribute_error.html',
+                                      {'shib_attrs': attr})
         return None
     else:
         return HttpResponseRedirect(build_shib_url(request, request.build_absolute_uri()))

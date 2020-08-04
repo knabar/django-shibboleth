@@ -17,7 +17,7 @@
 
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.template import loader, RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -57,19 +57,19 @@ def shib_register(request, RegisterForm=BaseRegisterForm,
     if error:
         return render_forbidden('shibboleth/attribute_error.html',
                                   context,
-                                  context_instance=RequestContext(request))
+                                  request=request)
     try:
         username = attr[settings.SHIB_USERNAME]
         # TODO this should log a misconfiguration.
     except:
         return render_forbidden('shibboleth/attribute_error.html',
                                   context,
-                                  context_instance=RequestContext(request))
+                                  request=request)
 
     if not attr[settings.SHIB_USERNAME] or attr[settings.SHIB_USERNAME] == '':
         return render_forbidden('shibboleth/attribute_error.html',
                                   context,
-                                  context_instance=RequestContext(request))
+                                  request=request)
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -83,9 +83,8 @@ def shib_register(request, RegisterForm=BaseRegisterForm,
                    'next': redirect_url,
                    'shib_attrs': attr,
                    'was_redirected': was_redirected}
-        return render_to_response(register_template_name,
-                                  context,
-                                  context_instance=RequestContext(request))
+        return render(request, register_template_name,
+                                  context)
 
     user.set_unusable_password()
     try:
@@ -110,6 +109,5 @@ def shib_meta(request):
 
     meta_data = request.META.items()
 
-    return render_to_response('shibboleth/meta.html',
-                              {'meta_data': meta_data},
-                              context_instance=RequestContext(request))
+    return render(request, 'shibboleth/meta.html',
+                              {'meta_data': meta_data})
